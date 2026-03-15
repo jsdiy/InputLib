@@ -68,20 +68,20 @@ A-----△B	クラスAはクラスBを継承する
 	例: pin(プルアップ)--プッシュオンスイッチ--GND  
 	例: pin(プルアップ)--プッシュオフスイッチ--GND
 ```
-enum class SwState : uint8_t { On, ShortHold, LongHold, Release, Off };
-押しボタンスイッチの操作に対する判定の状態
-  何もしていない|<押した>|      押し続けている     |<放した> |何もしていない
-  Off--------->|   On  |ShortHold-->|LongHold-->|Release |Off---------->
-                                    ↑長押し開始  |クリック |
-※OnとReleaseは一瞬の出来事
-※ShortHoldからLongHoldへ変化する瞬間が長押し開始の判定箇所
-※<放した>瞬間がクリックの判定箇所
+enum class State : uint8_t { Press, Holding, LongPress, LongHolding, Release, Free };
+押しボタンスイッチの操作における状態とイベント
+
+sw-off |sw-on                    |sw-off
+Free-->|Holding-->|LongHolding-->|Free-->
+       ^Press     ^LongPress     ^Release
+
+※Press,Release,LongPressの発生は1フレームの出来事
 ```
 
 ### HwSwitchA
 - HwSwitchの非同期版（Ticker.attach_ms()によるポーリング）
 - コールバックを登録し、イベント検出時に実行することができる
-- イベントは、クリック、長押し開始、RISING, FALLING, CHANGEに対応  
+- イベントは、押した、長押し成立、放した、RISING, FALLING, CHANGEに対応  
 	CHANGEはRISING/FALLINGの区別が可能
 
 ## クラスの説明：アナログ入力
@@ -90,19 +90,31 @@ enum class SwState : uint8_t { On, ShortHold, LongHold, Release, Off };
 
 ### PotMeter
 - ボリューム（VR/可変抵抗器）、スライドボリューム、ジョイスティック/レバーなどを想定
-- 上限/下限の閾値・ヒステリシスを設定し、それらを越えたか判定することができる（同期処理）
+- 上限/下限の閾値・ヒステリシスを設定し、それらを越えたか/復帰したかを判定することができる（同期処理）
 ```
-enum class AdcThrState : uint8_t { None, Rising, Above, Falling, Bellow };
-閾値に対する判定の状態
-ADC:0 ----+------------+----> max
-Bellow <--|<-- None -->|--> Above
-          ↑Falling     ↑Rising
+enum class State : uint8_t { HighRange, OnRiseToHigh, OnFallFromHigh,
+                             MidRange, OnRiseFromLow, OnFallToLow, LowRange };
+閾値で区切られたADC値の状態とイベント
+
+        ->||<- hys       ->||<- hys
+ADC:0 ----++---------------++----> max
+       thr^|               |^thr
+
+ADC:0 -----++--------------++-----> max
+LowRange <-|<-  MidRange  ->|-> HighRange
+           ^OnFallToLow     ^OnRiseToHigh
+            (from Mid)       (from Mid)
+
+ADC:0 -----++--------------++-----> max
+LowRange  ->|-> MidRange <-|<- HighRange
+            ^OnRiseFromLow ^OnFallFromHigh
+             (to Mid)       (to Mid)
 ```
 
 ### PotMeterA
 - PotMeterの非同期版（Ticker.attach_ms()によるポーリング）
 - コールバックを登録し、イベント検出時に実行することができる
-- イベントは、上限を上回った、下限を下回った、に対応
+- イベントは、上限を上回った/下回った、下限を下回った/上回った、に対応
 
 ## クラスの説明：デジタル入力/アナログ入力に共通
 ### CallbackHandler
@@ -113,18 +125,21 @@ Bellow <--|<-- None -->|--> Above
 - どのイベントもコールバック関数は void func(void)型を登録できる
 - void func(uint32_t)型を登録した場合は受け取れる引数がイベントによって異なる
 
-|HwSwitchAで発生するイベント|イベントの説明|void func(uint32_t n) の n|
+|HwSwitchAで検知されるイベント|イベントの説明|void func(uint32_t n) の n|
 |---|---|---|
-|OnClicked|クリックされた|0|
-|OnHeld|長押しが開始された|0|
+|OnPress|スイッチを押した|0|
+|OnLongPress|長押しが成立した|0|
+|OnRelease|スイッチを放した|0|
 |OnRising|attachInterrupt(,,RISING)に相当|0|
 |OnFalling|attachInterrupt(,,FALLING)に相当|0|
 |OnChange|attachInterrupt(,,CHANGE)に相当|RISING または FALLING|
 
-|PotMeterAで発生するイベント|イベントの説明|void func(uint32_t n) の n|
+|PotMeterAで検知されるイベント|イベントの説明|void func(uint32_t n) の n|
 |---|---|---|
-|OnRising|設定した上限値を上回った|そのときのADCの値（実質int16_t型）|
-|OnFalling|設定した下限値を下回った|そのときのADCの値（実質int16_t型）|
+|OnRiseToHigh|設定した上限値を上回った|そのときのADCの値（実質int16_t型）|
+|OnFallFromHigh|設定した上限値を下回った|そのときのADCの値（実質int16_t型）|
+|OnFallToLow|設定した下限値を下回った|そのときのADCの値（実質int16_t型）|
+|OnRiseFromLow|設定した下限値を上回った|そのときのADCの値（実質int16_t型）|
 
 -----
 以上
