@@ -55,6 +55,7 @@ PotMeter::State	PotMeter::GetNextState(int16_t curentAdcVal)
 int16_t	PotMeter::UpdateState()
 {
 	int16_t curentAdcVal = Read();
+	if (0 < complementAdcVal) { curentAdcVal = complementAdcVal - curentAdcVal; }
 	currentState = GetNextState(curentAdcVal);
 	return curentAdcVal;
 }
