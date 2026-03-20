@@ -9,8 +9,10 @@
 void	HwSwitch::Initialize(gpio_num_t swPin)
 {
 	DigitalInput::Initialize(swPin);
+	longHoldThresholdTime = TimeInfinity;
+	holdStartTime = 0;
 	ActiveLowSwitch();
-	prevPinVal = Read();
+	prevPinVal = SwOff;
 	UpdateState();
 }
 
@@ -26,10 +28,6 @@ HwSwitch::State	HwSwitch::GetNextState(int8_t currentPinVal)
 	}
 	else if (prevPinVal == SwOn && currentPinVal == SwOn)
 	{
-		/*
-		currentState = (nowTime - holdStartTime < longHoldThresholdTime)
-			? SwState::ShortHold : SwState::LongHold;
-		*/
 		State prevState = currentState, nextState = State::Holding;
 		if (longHoldThresholdTime <= nowTime - holdStartTime)
 		{
