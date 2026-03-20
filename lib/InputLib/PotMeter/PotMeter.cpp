@@ -8,9 +8,10 @@
 void	PotMeter::Initialize(gpio_num_t analogPin)
 {
 	AnalogInput::Initialize(analogPin);
+	currentState = State::MidRange;
+	SetInverted(0);
 	SetRisingThreshold(INT16_MAX, 0);
 	SetFallingThreshold(INT16_MIN, 0);
-	UpdateState();
 }
 
 void	PotMeter::SetThreshold(Threshold& obj, int16_t threshold, int16_t hysteresis)

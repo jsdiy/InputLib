@@ -43,7 +43,6 @@ public:
 	static	constexpr	uint8_t	LowMask		= 0x40;
 
 public:
-	//static	constexpr	int16_t	
 	static	constexpr	int16_t	DeadBandAdc	= 20;	//4095の0.5%（不感帯やヒステリシスのヒント）
 	static	constexpr	int16_t	DeadBandMV	= 16;	//3300mVの0.5%（不感帯やヒステリシスのヒント）
 
