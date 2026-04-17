@@ -33,7 +33,7 @@ public:
 protected:
 	static	constexpr	ulong	TimeInfinity = ULONG_MAX;
 
-private:
+protected:
 	int8_t	SwOn, SwOff;	//HIGH/LOWが割り当てられる
 	ulong	longHoldThresholdTime = TimeInfinity, holdStartTime = 0;
 	int8_t	prevPinVal;
