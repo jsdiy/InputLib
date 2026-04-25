@@ -58,3 +58,20 @@ int8_t	HwSwitch::UpdateState()
 	currentState = GetNextState(currentPinVal);
 	return currentPinVal;
 }
+
+//debug
+std::string	HwSwitch::ToName(HwSwitch::State state) const
+{
+	std::string name;
+	switch (state)
+	{
+	case	HwSwitch::State::Press:	name = "Press";	break;
+	case	HwSwitch::State::Holding:	name = "Holding";	break;
+	case	HwSwitch::State::LongPress:	name = "LongPress";	break;
+	case	HwSwitch::State::LongHolding:	name = "LongHolding";	break;
+	case	HwSwitch::State::Release:	name = "Release";	break;
+	case	HwSwitch::State::Free:	name = "Free";	break;
+	default:	name = "";	break;
+	}
+	return name;
+}
