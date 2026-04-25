@@ -10,7 +10,7 @@
 
 class	CallbackHandler
 {
-private:
+protected:
 	Ticker	ticker;	//Invokeで利用する
 	std::function<void()>	FnCallback = nullptr;
 	std::function<void(uint32_t)>	FnCallbackWithArg = nullptr;
