@@ -17,7 +17,7 @@ class	DigitalInput
 protected:
 	static	constexpr	ulong	DebounceTimeMillis = 20;	//チャタリング継続時間（想定）
 
-private:
+protected:
 	gpio_num_t	pin;
 	int8_t	pinVal;
 	ulong	debounceTime = DebounceTimeMillis, prevTime = 0;
