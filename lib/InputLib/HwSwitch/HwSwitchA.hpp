@@ -17,7 +17,7 @@ protected:
 	static	constexpr	uint32_t	TickMSec = 50;
 	//50ms --> 監視間隔は秒間20回	※DigitalInput::DebounceTimeMillisより長い方がよい
 
-private:
+protected:
 	Ticker	tkPolling;
 	CallbackHandler	onPress, onLongPress, onRelease;	//プッシュスイッチを想定した名前
 	CallbackHandler	onRising, onFalling, onChange;	//attachInterrupt()のトリガーに対応するイベント
