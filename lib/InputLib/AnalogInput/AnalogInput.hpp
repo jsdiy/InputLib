@@ -13,7 +13,7 @@ protected:
 	static	constexpr	uint8_t	SamplingCount		= 4;	//サンプリング回数（目安）
 	static	constexpr	uint8_t	SamplingCountMax	= 10;	//その上限（無駄に多くする必要はない）
 
-private:
+protected:
 	gpio_num_t	pin;
 	uint8_t	sampling = SamplingCount;
 	uint32_t (*FnAnalogRead)(uint8_t);	//analogRead()とanalogReadMilliVolts()の入れ替え
