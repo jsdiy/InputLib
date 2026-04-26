@@ -50,10 +50,6 @@ public:
 	State	GetState() const { return currentState; }
 	bool	IsSwOn() const { return (static_cast<uint8_t>(currentState) & SwOnMask); }
 	bool	IsSwOff() const { return !IsSwOn(); }
-
-//debug
-public:
-	std::string	ToName(HwSwitch::State state) const;
 };
 
 /*
