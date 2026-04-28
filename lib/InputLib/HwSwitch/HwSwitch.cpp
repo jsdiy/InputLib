@@ -8,12 +8,11 @@
 //初期化
 void	HwSwitch::Initialize(gpio_num_t swPin)
 {
-	DigitalInput::Initialize(swPin);
+	if (swPin != GPIO_NUM_NC) { DigitalInput::Initialize(swPin); }
 	longHoldThresholdTime = TimeInfinity;
 	holdStartTime = 0;
 	ActiveLowSwitch();
 	prevPinVal = SwOff;
-	UpdateState();
 }
 
 //新たなスイッチの状態を取得する
