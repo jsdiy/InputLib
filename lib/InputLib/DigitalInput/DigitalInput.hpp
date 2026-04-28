@@ -14,7 +14,7 @@
 //push_switch, toggle_switch, slide_switch, ...
 class	DigitalInput
 {
-protected:
+public:
 	static	constexpr	ulong	DebounceTimeMillis = 20;	//チャタリング継続時間（想定）
 
 protected:
