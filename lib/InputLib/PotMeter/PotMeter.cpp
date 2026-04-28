@@ -7,7 +7,7 @@
 
 void	PotMeter::Initialize(gpio_num_t analogPin)
 {
-	AnalogInput::Initialize(analogPin);
+	if (analogPin != GPIO_NUM_NC) { AnalogInput::Initialize(analogPin); }
 	currentState = State::MidRange;
 	SetInverted(0);
 	SetRisingThreshold(INT16_MAX, 0);
