@@ -9,7 +9,7 @@
 //potentio_meter, slid_volune, stick/lever, ...
 class	AnalogInput
 {
-protected:
+public:
 	static	constexpr	uint8_t	SamplingCount		= 4;	//サンプリング回数（目安）
 	static	constexpr	uint8_t	SamplingCountMax	= 10;	//その上限（無駄に多くする必要はない）
 
