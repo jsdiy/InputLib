@@ -44,6 +44,7 @@ public:
 
 public:
 	static	constexpr	int16_t	AdcValueMax	= 4095;
+	static	constexpr	int16_t	AdcMilliVoltMax	= 3300;
 	static	constexpr	int16_t	DeadBandAdc	= 20;	//4095の0.5%（不感帯やヒステリシスのヒント）
 	static	constexpr	int16_t	DeadBandMV	= 16;	//3300mVの0.5%（不感帯やヒステリシスのヒント）
 
