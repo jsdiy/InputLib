@@ -43,8 +43,8 @@ public:
 	static	constexpr	uint8_t	LowMask		= 0x40;
 
 public:
-	static	constexpr	int16_t	AdcValueMax	= 4095;
-	static	constexpr	int16_t	AdcMilliVoltMax	= 3300;
+	static	constexpr	int16_t	AdcMax12bit	= 4095;
+	static	constexpr	int16_t	AdcMaxMilliVolt	= 3300;
 	static	constexpr	int16_t	DeadBandAdc	= 20;	//4095の0.5%（不感帯やヒステリシスのヒント）
 	static	constexpr	int16_t	DeadBandMV	= 16;	//3300mVの0.5%（不感帯やヒステリシスのヒント）
 
@@ -54,12 +54,12 @@ protected:
 	void	SetThreshold(Threshold& obj, int16_t threshold, int16_t hysteresis);
 	State	currentState = State::MidRange;
 	State	GetNextState(int16_t curentAdcVal);
-	int16_t	complementAdcVal = AdcValueMax;
+	int16_t	complementAdcVal = AdcMax12bit;
 
 public:
 	PotMeter() {}
 	void	Initialize(gpio_num_t analogPin);
-	void	SetInverted(int16_t adcValMax = AdcValueMax) { complementAdcVal = adcValMax; }	//ADC値を逆にする（最大値の補数を取る）。戻すには0を指定する。
+	void	SetInverted(int16_t adcMaxVal) { complementAdcVal = adcMaxVal; }	//ADC値を逆にする（最大値の補数を取る）。戻すには0を指定する。
 	void	SetRisingThreshold(int16_t threshold, int16_t hysteresis = DeadBandAdc) { SetThreshold(thrRise, threshold, hysteresis); }
 	void	SetFallingThreshold(int16_t threshold, int16_t hysteresis = DeadBandAdc) { SetThreshold(thrFall, threshold, hysteresis); }
 	int16_t	UpdateState();	//loop()やタイマーで呼び出す
